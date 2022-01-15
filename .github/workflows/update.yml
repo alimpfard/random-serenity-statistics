@@ -1,0 +1,51 @@
+name: Run all scripts and update the repo
+
+on:
+  workflow_dispatch:
+  push:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  run_and_update_results:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout SerenityOS/serenity
+        uses: actions/checkout@v2
+        with:
+          repository: SerenityOS/serenity
+          path: serenity
+
+      - name: Deepen Serenity clone
+        run: |
+          git -C serenity fetch --depth=1000 origin master
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y jq gnuplot
+          sudo snap install scc
+
+      - name: Check versions
+        run: set +e; scc --version
+
+      - name: Run LoC script
+        run: |
+          bash scripts/loc.sh
+
+      - name: Update persistent data
+        run: |
+          git -C serenity rev-parse master > misc/last_commit
+
+      - name: Push back to origin
+        run: |
+          git config --global user.name BuggieBot
+          git config --global user.email buggiebot@serenityos.org
+          git commit -am "Update data"
+          git push
