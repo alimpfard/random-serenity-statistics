@@ -8,6 +8,6 @@ The currently available statistics are:
 
     ![LoC vs. Commits](view/loc.png)
 
-- Performance trend of tests (starting at commit caecb6ba72ab9bff2f8ae4950fa1ae68651a3931, snapshot daily)
+- Performance trend of tests (starting at commit https://github.com/SerenityOS/serenity/tree/caecb6ba72ab9bff2f8ae4950fa1ae68651a3931, snapshot daily)
     
     See [Here](view/benchmarks)
