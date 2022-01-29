@@ -48,6 +48,46 @@ rm -f new.results
 
 cd "$here"
 
+rm -fr view/benchmarks
+mkdir -p view/benchmarks
+
 for arch in i686 x86_64; do
+    mkdir -p view/benchmarks/$arch
+
     jq -sc . < benchmarks_$arch.sj > data/benchmarks_$arch.json
+    jq '[ .[] | reduce (to_entries[]) as $x([]; . + [$x.key]) ] | reduce .[] as $x([]; . + $x | unique)' < data/benchmarks_$arch.json > tests
+    jq 'map(. as $dot | $results[] | {($dot): map(.[$dot])}) | reduce .[] as $x({}; . + $x)' tests --slurpfile results data/benchmarks_$arch.json > all.json
+
+    oldIFS="$IFS"
+    IFS=$'\n'
+    for line in $(jq 'map(debug)|empty' tests 2>&1); do
+        name="$(echo "$line" | jq -r '.[1]')"
+        fs_name="$(echo "$name" | sed -e 's#/#_#g')"
+        echo $line $name $fs_name
+        IFS="$oldIFS"
+        rm -f "$fs_name.data"
+        for output in $(jq '.[$name] | map([.time, if .res == "PASS" then "0" else "1" end] | debug) | empty' all.json --arg name "$name" 2>&1); do
+            echo $(echo "$output" | jq '.[1] | .[]' -r) | sed -e 's/ /, /g' >> "$fs_name.data"
+        done
+
+        gnuplot <<<$(echo "
+            set terminal pngcairo size 1280,720
+            set palette model RGB defined ( 0 'green', 1 'red' )
+            set output 'view/benchmarks/$arch/$fs_name.png'
+            set border linewidth 1
+            set style \
+                line 1 \
+                linecolor rgb '#0060af' \
+                linetype 1 \
+                linewidth 2 \
+                pointtype 7 \
+                pointsize 1.3
+            set xtics 1
+            plot '$fs_name.data' using 0:1:(\$2 == 0 ? 0 : 1) with points pt 7 ps 3 palette title '$name'
+        ")
+
+        IFS=$'\n'
+    done
 done
+
+git add view/benchmarks
