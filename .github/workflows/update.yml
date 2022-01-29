@@ -25,19 +25,58 @@ jobs:
       - name: Deepen Serenity clone
         run: |
           git -C serenity fetch --depth=1000 origin master
+      
+      - name: Cache ccache for Serenity build
+        id: serenity-ccache
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/.ccache
+          key: ${{ runner.os }}-serenity-ccache
 
-      - name: Install dependencies
+      - name: Cache Serenity Toolchain
+        id: serenity-toolchain
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/serenity/Toolchain
+          key: ${{ runner.os }}-serenity-toolchain
+
+      - name: Cache Serenity build directory
+        id: serenity-build
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/serenity/Build
+          key: ${{ runner.os }}-serenity-build
+
+      - name: Install Serenity build dependencies
         run: |
+          sudo add-apt-repository ppa:canonical-server/server-backports
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update -y
-          sudo apt-get install -y jq gnuplot
+          sudo apt-get install -y ccache e2fsprogs gcc-11 g++-11 libstdc++-11-dev libmpfr-dev libmpc-dev ninja-build qemu-utils qemu-system-i386 unzip
+
+      - name: Install local script dependencies
+        run: |
+          sudo apt-get install -y jq bc gnuplot
           sudo snap install scc
 
       - name: Check versions
-        run: set +e; scc --version
+        run: set +e; scc --version; g++ --version; g++-11 --version; ninja --version; ccache --version; qemu-system-i386 --version; bc --version
 
       - name: Run LoC script
         run: |
           bash scripts/loc.sh
+
+      - name: Build Serenity
+        run: |
+          set -e; bash scripts/build.sh
+
+      - name: Run benchmarks
+        run: |
+          set -e; bash scripts/benchmark.sh
+
+      - name: Drop Serenity Toolchain/Build
+        run: |
+          rm -fr serenity/Toolchain/Build
 
       - name: Update persistent data
         run: |
