@@ -6,6 +6,9 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+env:
+  toolchain_mark: 0
+
 jobs:
   run_and_update_results:
     runs-on: ubuntu-20.04
@@ -38,7 +41,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/serenity/Toolchain
-          key: ${{ runner.os }}-serenity-toolchain
+          key: ${{ runner.os }}-serenity-toolchain-${{ env.toolchain_mark }}
 
       - name: Cache Serenity build directory
         id: serenity-build
