@@ -7,7 +7,7 @@ on:
     - cron: '0 0 * * *'
 
 env:
-  toolchain_mark: 0
+  toolchain_mark: 1
 
 jobs:
   run_and_update_results:
