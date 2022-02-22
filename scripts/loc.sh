@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -xeu
 
 here="$(realpath .)"
 jq '.[]' < data/loc.json > loc.sj
