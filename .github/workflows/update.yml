@@ -8,6 +8,7 @@ on:
 
 env:
   toolchain_mark: 1
+  build_mark: 0
 
 jobs:
   run_and_update_results:
@@ -48,7 +49,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/serenity/Build
-          key: ${{ runner.os }}-serenity-build
+          key: ${{ runner.os }}-serenity-build-${{ env.build_mark }}
 
       - name: Install Serenity build dependencies
         run: |
