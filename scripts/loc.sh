@@ -14,7 +14,7 @@ echo
 allcommits=$(git log "$last_indexed_commit"..HEAD --oneline | cut -f1 -d' ')
 
 for hash in $allcommits; do
-    git checkout "$hash" >/dev/null 2>&1
+    git checkout "$hash" >/dev/null 2>&1 || continue
     scc -cd --no-cocomo --no-min --format json --exclude-dir .git,Build,Toolchain,Ports 2>/dev/null | \
         jq -c 'map({Name, Lines, Code})' >> "$here/loc.sj"
 done
