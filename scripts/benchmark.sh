@@ -24,7 +24,7 @@ for arch in i686 x86_64; do
     oldIFS="$IFS"
     IFS=$'\n'
     for line in $(grep -hoE '^.*(PASS|FAIL|CRASHED).*\(.*\).*$' out.log); do
-        line="$(echo "$line" | sed -e 's#^.*\(PASS\|FAIL\|CRASHED\)\s\+.* \([a-zA-Z0-9_/.-]\+\).* (\([0-9.]\+m\?s\)).*$#\2,\3,\1#')"
+        line="$(echo "$line" | sed -e 's#^.*\(PASS\|FAIL\|CRASHED\)\s*\S*\s*\([a-zA-Z0-9_/.-]\+\).* (\([0-9.]\+m\?s\)).*$#\2,\3,\1#')"
         echo "Test result: $line"
         path="$(echo "$line" | cut -f1 -d,)"
         time="$(echo "$line" | cut -f2 -d,)"
