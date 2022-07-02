@@ -24,7 +24,7 @@ for arch in i686 x86_64; do
     oldIFS="$IFS"
     IFS=$'\n'
     for line in $(grep -hoE '^.*(PASS|FAIL|CRASHED).*\(.*\).*$' out.log); do
-        line="$(echo "$line" | sed -e 's#^.*\(PASS\|FAIL\|CRASHED\)\s*\S*\s*\([a-zA-Z0-9_/.-]\+\).* (\([0-9.]\+m\?s\)).*$#\2,\3,\1#')"
+        line="$(echo "$line" | sed -e 's#^.*\(PASS\|FAIL\|CRASHED\)\s*\S*\s*\([a-zA-Z0-9_/.-]\+\).*\( (\([0-9.]\+m\?s\))\)\?.*$#\2,\4,\1#')"
         echo "Test result: $line"
         path="$(echo "$line" | cut -f1 -d,)"
         time="$(echo "$line" | cut -f2 -d,)"
@@ -35,6 +35,9 @@ for arch in i686 x86_64; do
                 ;;
             *s)
                 time="$(echo "$(echo "$time" | cut -f1 -ds)" \* 1000 | bc)"
+                ;;
+            "")
+                time=0
                 ;;
         esac
         jq '{ ($a): { "time": $b, "res": $c } }' --arg a $path --arg b $time --arg c $res -n >> new.results
