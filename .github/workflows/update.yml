@@ -7,8 +7,8 @@ on:
     - cron: '0 0 * * *'
 
 env:
-  toolchain_mark: 2
-  build_mark: 1
+  toolchain_mark: 3
+  build_mark: 2
 
 jobs:
   run_and_update_results:
@@ -35,21 +35,24 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /home/runner/.ccache
-          key: ${{ runner.os }}-serenity-ccache
-
+          key: ${{ runner.os }}-serenity-ccache-run-{{ github.run_id }}
+          restore-keys: ${{ runner.os }}-serenity-ccache-
+          
       - name: Cache Serenity Toolchain
         id: serenity-toolchain
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/serenity/Toolchain
-          key: ${{ runner.os }}-serenity-toolchain-${{ env.toolchain_mark }}
+          key: ${{ runner.os }}-serenity-toolchain-${{ env.toolchain_mark }}-run-{{ github.run_id }}
+          restore-keys: ${{ runner.os }}-serenity-toolchain-${{ env.toolchain_mark }}-
 
       - name: Cache Serenity build directory
         id: serenity-build
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/serenity/Build
-          key: ${{ runner.os }}-serenity-build-${{ env.build_mark }}
+          key: ${{ runner.os }}-serenity-build-${{ env.build_mark }}-run-{{ github.run_id }}
+          restore-keys: ${{ runner.os }}-serenity-build-${{ env.build_mark }}-
 
       - name: Install Serenity build dependencies
         run: |
