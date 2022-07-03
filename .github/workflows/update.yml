@@ -35,7 +35,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /home/runner/.ccache
-          key: ${{ runner.os }}-serenity-ccache-run-{{ github.run_id }}
+          key: ${{ runner.os }}-serenity-ccache-run-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-serenity-ccache-
           
       - name: Cache Serenity Toolchain
@@ -43,7 +43,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/serenity/Toolchain
-          key: ${{ runner.os }}-serenity-toolchain-${{ env.toolchain_mark }}-run-{{ github.run_id }}
+          key: ${{ runner.os }}-serenity-toolchain-${{ env.toolchain_mark }}-run-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-serenity-toolchain-${{ env.toolchain_mark }}-
 
       - name: Cache Serenity build directory
@@ -51,7 +51,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/serenity/Build
-          key: ${{ runner.os }}-serenity-build-${{ env.build_mark }}-run-{{ github.run_id }}
+          key: ${{ runner.os }}-serenity-build-${{ env.build_mark }}-run-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-serenity-build-${{ env.build_mark }}-
 
       - name: Install Serenity build dependencies
