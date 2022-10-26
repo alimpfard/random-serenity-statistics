@@ -12,7 +12,7 @@ env:
 
 jobs:
   run_and_update_results:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout this repo
