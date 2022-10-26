@@ -7,8 +7,8 @@ on:
     - cron: '0 0 * * *'
 
 env:
-  toolchain_mark: 4
-  build_mark: 3
+  toolchain_mark: 5
+  build_mark: 4
 
 jobs:
   run_and_update_results:
@@ -59,7 +59,7 @@ jobs:
           sudo add-apt-repository ppa:canonical-server/server-backports
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update -y
-          sudo apt-get install -y ccache e2fsprogs gcc-11 g++-11 libstdc++-11-dev libmpfr-dev libmpc-dev ninja-build qemu-utils qemu-system-i386 unzip
+          sudo apt-get install -y ccache e2fsprogs gcc-12 g++-12 libstdc++-12-dev libmpfr-dev libmpc-dev ninja-build qemu-utils qemu-system-i386 unzip
 
       - name: Install local script dependencies
         run: |
@@ -67,7 +67,7 @@ jobs:
           sudo snap install scc
 
       - name: Check versions
-        run: set +e; scc --version; g++ --version; g++-11 --version; ninja --version; ccache --version; qemu-system-i386 --version; bc --version
+        run: set +e; scc --version; g++ --version; g++-12 --version; ninja --version; ccache --version; qemu-system-i386 --version; bc --version
 
       - name: Run LoC script
         run: |
