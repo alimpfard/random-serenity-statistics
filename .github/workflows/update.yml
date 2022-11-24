@@ -56,7 +56,6 @@ jobs:
 
       - name: Install Serenity build dependencies
         run: |
-          sudo add-apt-repository ppa:canonical-server/server-backports
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update -y
           sudo apt-get install -y ccache e2fsprogs gcc-12 g++-12 libstdc++-12-dev libmpfr-dev libmpc-dev ninja-build qemu-utils qemu-system-i386 unzip
