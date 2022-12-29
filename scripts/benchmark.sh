@@ -5,12 +5,11 @@ set -eu
 here="$(realpath .)"
 
 jq '.[]' < data/benchmarks_x86_64.json > benchmarks_x86_64.sj
-jq '.[]' < data/benchmarks_i686.json > benchmarks_i686.sj
 
 cd serenity
 
 # Make a simple, normal build and run the tests
-for arch in i686 x86_64; do
+for arch in x86_64; do
     rm -f new.results
     touch new.results
 
@@ -54,7 +53,7 @@ cd "$here"
 rm -fr view/benchmarks
 mkdir -p view/benchmarks
 
-for arch in i686 x86_64; do
+for arch in x86_64; do
     mkdir -p view/benchmarks/$arch
 
     jq -sc . < benchmarks_$arch.sj > data/benchmarks_$arch.json
