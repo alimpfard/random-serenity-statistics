@@ -28,7 +28,7 @@ jobs:
 
       - name: Deepen Serenity clone
         run: |
-          git -C serenity fetch --depth=1000 origin master
+          git -C serenity fetch --depth=2000 origin master
       
       - name: Cache ccache for Serenity build
         id: serenity-ccache
