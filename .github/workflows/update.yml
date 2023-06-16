@@ -9,6 +9,7 @@ on:
 env:
   toolchain_mark: 7
   build_mark: 6
+  serenity_mark: 0
 
 jobs:
   run_and_update_results:
@@ -35,8 +36,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /home/runner/.ccache
-          key: ${{ runner.os }}-serenity-ccache-run-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-serenity-ccache-
+          key: ${{ runner.os }}-serenity-ccache-${{ env.serenity_mark }}-run-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-serenity-ccache-${{ env.serenity_mark }}-
           
       - name: Cache Serenity Toolchain
         id: serenity-toolchain
